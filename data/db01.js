@@ -1,5 +1,12 @@
+let id = 1;
+
+function nextID() {
+    return id++;
+}
+
+
 const auth = {
-    id: 1,
+    id: nextID(),
     nome: 'José Bezerra',
     email: 'josebezerra@gmail.com',
     idade: 24,
@@ -10,7 +17,7 @@ const auth = {
 
 const usuarios = [
     {
-        id: 1,
+        id: nextID(),
         nome: 'José Bezerra',
         email: 'josebezerra@gmail.com',
         idade: 24,
@@ -20,7 +27,7 @@ const usuarios = [
         status: 'ATIVO'
     },
     {
-        id: 2,
+        id: nextID(),
         nome: 'Jão battista',
         email: 'jaobatismos@gmail.com',
         idade: 34,
@@ -30,7 +37,7 @@ const usuarios = [
         status: 'ATIVO'
     },
     {
-        id: 3,
+        id: nextID(),
         nome: 'Maria Dolores',
         email: 'mariadejesus@gmail.com',
         idade: 16,
@@ -40,7 +47,7 @@ const usuarios = [
         status: 'INATIVO'
     },
     {
-        id: 4,
+        id: nextID(),
         nome: 'Lucas Pinheiro',
         email: 'lucaspinheiro@gmail.com',
         idade: 27,
@@ -50,7 +57,7 @@ const usuarios = [
         status: 'BLOQUEADO'
     },
     {
-        id: 5,
+        id: nextID(),
         nome: 'Carla Mafiolleti',
         email: 'carlabonequinha@gmail.com',
         idade: 32,
@@ -60,7 +67,7 @@ const usuarios = [
         status: 'INATIVO'
     },
     {
-        id: 6,
+        id: nextID(),
         nome: 'Julia Fuoco',
         email: 'jujufogosa@gmail.com',
         idade: 19,
@@ -70,7 +77,7 @@ const usuarios = [
         status: 'ATIVO'
     },
     {
-        id: 7,
+        id: nextID(),
         nome: 'Brenda Cavalcanti',
         email: 'brendacavalcanti@gmail.com',
         idade: 46,
@@ -88,7 +95,7 @@ const perfis = [
 
 const produtos = [
     {
-        id: 1,
+        id: nextID(),
         nome: 'playstaxion',
         preco: 1427.24,
         desconto: 0.25,
@@ -96,7 +103,7 @@ const produtos = [
         estoque: 25
     },
     {
-        id: 2,
+        id: nextID(),
         nome: 'Notebook',
         preco: 3495.99,
         desconto: 0.5,
@@ -104,7 +111,7 @@ const produtos = [
         estoque: 134
     },
     {
-        id: 3,
+        id: nextID(),
         nome: 'PC Gamer',
         preco: 4674.99,
         desconto: 0.10,
@@ -112,7 +119,7 @@ const produtos = [
         estoque: 642
     },
     {
-        id: 4,
+        id: nextID(),
         nome: 'Headset Gamer',
         preco: 678.99,
         desconto: 0.20,
@@ -120,7 +127,7 @@ const produtos = [
         estoque: 54
     },
     {
-        id: 5,
+        id: nextID(),
         nome: 'Capa de Celular',
         preco: 25.49,
         desconto: null,
@@ -128,7 +135,7 @@ const produtos = [
         estoque: 2
     },
     {
-        id: 6,
+        id: nextID(),
         nome: 'Carregador Tipo C',
         preco: 79.99,
         desconto: null,
@@ -136,7 +143,7 @@ const produtos = [
         estoque: 5647
     },
     {
-        id: 7,
+        id: nextID(),
         nome: 'TV LED 49 UltraHD ',
         preco: 8647.99,
         desconto: 0.33,
@@ -144,7 +151,7 @@ const produtos = [
         estoque: 41
     },
     {
-        id: 8,
+        id: nextID(),
         nome: 'Monitor Gamer AOC 75MHz',
         preco: 3427.99,
         desconto: null,
@@ -152,7 +159,7 @@ const produtos = [
         estoque: 677
     },
     {
-        id: 9,
+        id: nextID(),
         nome: 'Mouse Gamer',
         preco: 342.88,
         desconto: null,
@@ -160,7 +167,7 @@ const produtos = [
         estoque: 1
     },
     {
-        id: 10,
+        id: nextID(),
         nome: 'Teclado Mecânico',
         preco: 220,
         desconto: null,
@@ -169,4 +176,4 @@ const produtos = [
     }
 ];
 
-module.exports = { usuarios, perfis, auth, produtos };
+module.exports = { usuarios, perfis, auth, produtos, nextID };
