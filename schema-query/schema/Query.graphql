@@ -1,0 +1,24 @@
+# Pontos de entrada da Api
+type Query {
+
+    ola: String!
+
+    sysDate: Date!
+
+    usuarioLogado: Usuario
+
+    listarProdutos: [Produto]
+
+    produtoEmDestaque(id: Int): Produto
+
+    numerosMegaSena: [Int!]!
+
+    listarUsuarios: [Usuario]
+
+    usuario(id: Int): Usuario
+
+    perfis: [Perfil]
+
+    perfil(id: Int): Perfil
+
+}
