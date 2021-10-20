@@ -1,57 +1,70 @@
-const { usuarios, nextID } = require('../../data/db01');
-
-function indiceUsuario(filtro) {
-    if(!filtro) return -1;
-    const { id, email } = filtro;
-
-    return id   ? usuarios.findIndex( user => user.id === id ) 
-                : usuarios.findIndex( user => user.email === email );
-}
+const db = require('../../config/db')
+const { perfil : obterPerfil } = require('../Query/perfil');
+const { usuario: obterUsuario } = require('../Query/usuario');
+const md5 = require('md5');
 
 module.exports = {
-    novoUsuario(_, { dados }) {
+    async novoUsuario(_, { dados }) {
+        try {
+            const idsPerfis = [];
+            if(dados.perfis){
+                for(let perfilFiltro of dados.perfis) {
+                    const perfil = await obterPerfil(_, {  filtro: perfilFiltro });
+                    if(perfil) idsPerfis.push(perfil.id);
+                }
+            }
 
-        const emailExistente = usuarios.some( user => user.email === dados.email );
+            const [ id ] = await db('usuarios').insert({ 
+                nome: dados.nome,
+                email: dados.email,
+                senha: md5(dados.senha)
+            });
 
-        if(emailExistente) {
-            throw new Error('E-mail já cadastrado!');
+            for(let perfil_id of idsPerfis){
+                await db('usuarios_perfis').insert({ perfil_id, usuario_id: id });
+            }
+
+            return db('usuarios').where({ id }).first();
+
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
         }
-
-        const novo = {
-            id: nextID(),
-            ...dados,
-            perfil_id: 2,
-            status: 'ATIVO'
-        }
-
-        usuarios.push(novo);
-        return novo;
     },
-
-    excluirUsuario(_, { filtro }) {
-        const indice = indiceUsuario(filtro);
-
-        if(indice<0) return null;
-        const excluidos = usuarios.splice(indice, 1);
-        usuarios.sort();
-
-        return excluidos ? excluidos[0] : null;
-
-    },
-
-    updateUsuario(_, { filtro, dados } ) {
-        const indice = indiceUsuario(filtro);
-
-        if(indice<0) return null;
-        
-        const usuario = {
-            ...usuarios[indice],
-            ...dados
+    async excluirUsuario(_, { filtro }) {
+        try{
+            const usuario = await obterUsuario(_, { filtro });
+            if(usuario) {
+                const { id } = usuario;
+                await db('usuarios_perfis').where({ usuario_id: id }).delete();
+                await db('usuarios').where({ id }).delete();
+            }
+            return usuario;
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
         }
-        usuarios.splice(indice, 1, usuario);
+    },
+    async updateUsuario(_, { filtro, dados }) {
+        try{
+            const usuario = await obterUsuario(_, { filtro });
+            if(usuario) {
+                const { id } = usuario;
+                if(dados.perfis) {
+                    await db('usuarios_perfis').where({ usuario_id: id }).delete();
 
-        return usuario;
+                    for(let filtro of dados.perfis) {
+                        const perfil = await obterPerfil(_, { filtro });
+                        perfil && await db('usuarios_perfis').insert({ perfil_id: perfil.id, usuario_id: id });
+                    }
+                }
+                await db('usuarios').where({ id }).update({
+                    nome: dados.nome,
+                    email: dados.email,
+                    senha: md5(dados.senha)
+                });
+            }
+            return !usuario ? null : { ...usuario, ...dados };
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
+        }
     }
-
 }
-

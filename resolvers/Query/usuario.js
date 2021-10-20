@@ -1,18 +1,17 @@
-const { usuarios, auth } = require('../../data/db01');
+const db = require('../../config/db')
 
 module.exports = {
-    usuario(_, { id }){
-        const selecionados = usuarios.filter(user => user.id === id);
-        return selecionados ? selecionados[0] : null;
+    async usuarios() {
+        return await db('usuarios');
     },
+    async usuario(_, { filtro }) {
+        if(!filtro) return null;
+        const { id, email } = filtro;
 
-    listarUsuarios() {
-        return usuarios;
+        return id 
+            ? await db('usuarios').where({ id }).first() 
+            : email 
+                ? await db('usuarios').where({ email }).first() 
+                : null;
     },
-    
-    usuarioLogado() {
-        const usuarioLogado = auth;
-        return usuarioLogado;
-    }
-    
 }

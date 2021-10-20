@@ -1,5 +1,5 @@
 {
-  "name": "schema-query",
+  "name": "desafio-cap-04",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,8 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.4.8",
+    "dotenv": "^10.0.0",
     "graphql": "^14.2.1",
-    "graphql-import": "^1.0.2"
+    "graphql-import": "^0.7.1",
+    "knex": "^0.95.11",
+    "md5": "^2.3.0",
+    "mysql": "^2.16.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"

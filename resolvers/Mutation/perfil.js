@@ -1,54 +1,38 @@
-const { perfis, nextID } = require('../../data/db01');
-
-function indicePerfil(filtro) {
-    if(!filtro) return -1;
-    const { id } = filtro;
-
-    return perfis.findIndex( perfil => perfil.id === id ); 
-}
+const db = require('../../config/db');
+const { perfil : obterPerfil } = require('../Query/perfil');
 
 module.exports = {
-
-    novoPerfil(_, { dados }) {
-        const perfilExistente = perfis.some( perfil => perfil.nome === dados.nome );
-
-        if(perfilExistente) {
-            throw new Error('Perfil já cadastrado!');
+    async novoPerfil(_, { dados }) {
+        try {
+            const [ id ] = await db('perfis').insert(dados);
+            return db('perfis').where({ id }).first();
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
         }
-
-        const novo = {
-            id: nextID(), 
-            ...dados,
-        }
-
-        perfis.push(novo);
-        return novo;
     },
-
-    updatePerfil(_, { filtro, dados } ) {
-        const indice = indicePerfil(filtro);
-
-        if(indice<0) return null;
-        
-        const perfil = {
-            ...perfis[indice],
-            ...dados,
+    async excluirPerfil(_, { filtro }) {
+        try{
+            const perfil = await obterPerfil(_, { filtro });
+            if(perfil) {
+                const { id } = perfil;
+                await db('usuarios_perfis').where({ perfil_id: id }).delete();
+                await db('perfis').where({ id }).delete();
+            }
+            return perfil;
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
         }
-        perfis.splice(indice, 1, perfil);
-
-        return perfil;
     },
-
-    excluirPerfil(_, { filtro }) {
-        const indice = indicePerfil(filtro);
-
-        if(indice<0) return null;
-        const excluidos = perfis.splice(indice, 1);
-        perfis.sort();
-
-        return excluidos ? excluidos[0] : null;
-
+    async updatePerfil(_, { filtro, dados }) {
+        try{
+            const perfil = await obterPerfil(_, { filtro });
+            if(perfil) {
+                const { id } = perfil;
+                await db('perfis').where({ id }).update(dados);
+            }
+            return { ...perfil, ...dados };
+        }catch(err) {
+            throw new Error(err.sqlMessage, err);
+        }
     }
-
 }
-

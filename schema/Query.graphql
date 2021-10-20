@@ -1,18 +1,7 @@
-# Pontos de entrada da Api
+# Pontos de entrada da sua API!
 type Query {
-
-    usuarioLogado: Usuario
-
-    listarProdutos: [Produto]
-
-    produtoEmDestaque(id: Int): Produto
-
-    listarUsuarios: [Usuario]
-
-    usuario(id: Int): Usuario
-
+    usuarios: [Usuario]
+    usuario(filtro: UsuarioFiltro!): Usuario
     perfis: [Perfil]
-
-    perfil(id: Int): Perfil
-
+    perfil(filtro: PerfilFiltro!): Perfil
 }
